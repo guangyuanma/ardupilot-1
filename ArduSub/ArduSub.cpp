@@ -288,6 +288,10 @@ void Sub::one_hz_loop()
     // need to set "likely flying" when armed to allow for compass
     // learning to run
     ahrs.set_likely_flying(hal.util->get_soft_armed());
+
+    gcs().send_text(MAV_SEVERITY_CRITICAL,
+                     "Current altitude: %.1fm",
+                     sub.get_look_ahead_yaw());
 }
 
 // called at 50hz
