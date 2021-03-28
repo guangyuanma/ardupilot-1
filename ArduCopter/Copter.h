@@ -237,6 +237,7 @@ public:
     friend class ModeStabilize_Heli;
     friend class ModeThrow;
     friend class ModeZigZag;
+    friend class ModeDrawStar;
 
     Copter(void);
 
@@ -954,6 +955,8 @@ private:
 #if !HAL_MINIMIZE_FEATURES && OPTFLOW == ENABLED
     ModeFlowHold mode_flowhold;
 #endif
+
+    ModeDrawStar modeDrawStar;
 #if MODE_ZIGZAG_ENABLED == ENABLED
     ModeZigZag mode_zigzag;
 #endif

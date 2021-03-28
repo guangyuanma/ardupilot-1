@@ -35,6 +35,7 @@ public:
         FLOWHOLD  =    22,  // FLOWHOLD holds position with optical flow without rangefinder
         FOLLOW    =    23,  // follow attempts to follow another vehicle or ground station
         ZIGZAG    =    24,  // ZIGZAG mode is able to fly in a zigzag manner with predefined point A and point B
+		DRAWSTAR = 25,
     };
 
     // constructor
@@ -749,7 +750,43 @@ private:
 };
 #endif // OPTFLOW
 
+class ModeDrawStar : public Mode {
 
+public:
+    // inherit constructor
+    using Mode::Mode;
+
+    bool init(bool ignore_checks) override;
+    void run() override;
+
+    bool requires_GPS() const override { return true; }
+    bool has_manual_throttle() const override { return false; }
+    bool allows_arming(bool from_gcs) const override { return false; }
+    bool is_autopilot() const override { return true; }
+    bool has_user_takeoff(bool must_navigate) const override { return false; }
+    bool in_guided_mode() const override { return true; }
+
+
+protected:
+
+    const char *name() const override { return "DRAWSTAR"; }
+    const char *name4() const override { return "DRAWSTAR"; }
+
+
+
+private:
+
+    Vector3f path[10];
+    int path_num;
+    void generate_path();
+
+    void pos_control_start();
+
+    void pos_control_run();
+
+
+
+};
 class ModeGuided : public Mode {
 
 public:
