@@ -78,6 +78,7 @@
 #include <AP_TemperatureSensor/TSYS01.h>
 #include <AP_Common/AP_FWVersion.h>
 
+#include <AP_Yi_Star/AP_Yi_Star.h>
 // Local modules
 #include "defines.h"
 #include "config.h"
@@ -170,6 +171,8 @@ private:
     AP_Logger logger;
 
     AP_GPS gps;
+
+    AP_Yi_Star yi_star;
 
     AP_LeakDetector leak_detector;
 
@@ -404,6 +407,9 @@ private:
 
     // handle repeated servo and relay events
     AP_ServoRelayEvents ServoRelayEvents;
+
+
+
 
     // Camera
 #if CAMERA == ENABLED
@@ -714,6 +720,7 @@ private:
 public:
     void mavlink_delay_cb();
     void mainloop_failsafe_check();
+    void update_Yi_Star();
 };
 
 extern const AP_HAL::HAL& hal;
