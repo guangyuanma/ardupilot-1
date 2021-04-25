@@ -302,6 +302,9 @@ public:
     AP_Float                surface_depth;
     AP_Int8                 frame_configuration;
 
+    AP_Int16                crawlerspeed_motor1;
+    AP_Int16                crawlerspeed_motor2;
+
     // Note: keep initializers here in the same order as they are declared
     // above.
     Parameters()
@@ -337,6 +340,11 @@ public:
 #ifdef ENABLE_SCRIPTING
     AP_Scripting scripting;
 #endif // ENABLE_SCRIPTING
+
+
+
+    AP_Int16  crawlerspeed_motor1;   //履带电机1速度
+    AP_Int16  crawlerspeed_motor2;   //履带电机2速度
 
 };
 

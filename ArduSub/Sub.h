@@ -78,7 +78,7 @@
 #include <AP_TemperatureSensor/TSYS01.h>
 #include <AP_Common/AP_FWVersion.h>
 
-#include <AP_Yi_Star/AP_Yi_Star.h>
+#include <AP_CrawlerMotor/AP_CrawlerMotor.h>
 // Local modules
 #include "defines.h"
 #include "config.h"
@@ -172,7 +172,7 @@ private:
 
     AP_GPS gps;
 
-    AP_Yi_Star yi_star;
+    AP_CrawlerMotor crawlermotor; //履带电机
 
     AP_LeakDetector leak_detector;
 
@@ -692,6 +692,13 @@ private:
     bool handle_do_motor_test(mavlink_command_long_t command);
     bool init_motor_test();
     bool verify_motor_test();
+
+
+
+    void update_crawlermotor(); //更新履带电机
+
+    uint32_t m_cnt;      //
+
 
     uint32_t last_do_motor_test_fail_ms = 0;
     uint32_t last_do_motor_test_ms = 0;

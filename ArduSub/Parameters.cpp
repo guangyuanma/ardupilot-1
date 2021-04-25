@@ -633,7 +633,17 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     AP_SUBGROUPINFO(scripting, "SCR_", 18, ParametersG2, AP_Scripting),
 #endif
 
+
+
+	AP_GROUPINFO("CRAWLER_MOTOR_1", 19, ParametersG2, crawlerspeed_motor1, 0),
+    AP_GROUPINFO("CRAWLER_MOTOR_2", 20, ParametersG2, crawlerspeed_motor2, 0),
+
+
     AP_GROUPEND
+
+
+
+
 };
 
 /*

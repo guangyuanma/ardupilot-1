@@ -34,7 +34,7 @@ const AP_Scheduler::Task Sub::scheduler_tasks[] = {
     SCHED_TASK(read_rangefinder,      20,    100),
     SCHED_TASK(update_altitude,       10,    100),
     SCHED_TASK(three_hz_loop,          3,     75),
-	SCHED_TASK(update_Yi_Star,        400,    100),
+	SCHED_TASK(update_crawlermotor,   5,    220),
     SCHED_TASK(update_turn_counter,   10,     50),
     SCHED_TASK_CLASS(AP_Baro,             &sub.barometer,    accumulate,          50,  90),
     SCHED_TASK_CLASS(AP_Notify,           &sub.notify,       update,              50,  90),
@@ -255,9 +255,27 @@ void Sub::three_hz_loop()
 
     ServoRelayEvents.update_events();
 }
-void Sub::update_Yi_Star()
+
+
+//5hz 即200ms更新一次
+//履带电机：周期200ms发送命令； 电机周期100ms自动返回数据，1s返回地面站一次。
+void Sub::update_crawlermotor()
 {
-	yi_star.update();
+
+	//crawlermotor.update();
+	crawlermotor.m_crawlerspeed_motor1 = g2.crawlerspeed_motor1;
+	crawlermotor.m_crawlerspeed_motor2 = g2.crawlerspeed_motor2;
+
+
+	crawlermotor.sendData();
+
+	m_cnt++;
+	if(m_cnt == 10)       //2s 接受一次数据返回地面站
+	{
+		crawlermotor.receiveData();
+		m_cnt = 0;
+		gcs().send_text(MAV_SEVERITY_CRITICAL, "motor1 speed:%d motor2 speed:%d", crawlermotor._recvdata.V_motor1.sall, crawlermotor._recvdata.V_motor2.sall);
+	}
 
 
 
@@ -297,7 +315,7 @@ void Sub::one_hz_loop()
     ahrs.set_likely_flying(hal.util->get_soft_armed());
 
 
-    gcs().send_text(MAV_SEVERITY_CRITICAL, "Yi star x%d  y%d", yi_star.cx, yi_star.cy);
+
 }
 
 // called at 50hz

@@ -45,6 +45,9 @@ Sub::Sub()
     sensor_health.baro = true;
     sensor_health.compass = true;
 
+
+    m_cnt = 0;
+
 #if CONFIG_HAL_BOARD != HAL_BOARD_SITL
     failsafe.pilot_input = true;
 #endif
