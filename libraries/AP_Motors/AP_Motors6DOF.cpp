@@ -20,6 +20,7 @@
 #include <AP_BattMonitor/AP_BattMonitor.h>
 #include <AP_HAL/AP_HAL.h>
 #include "AP_Motors6DOF.h"
+#define DELAYTIME 300
 
 extern const AP_HAL::HAL& hal;
 
@@ -120,7 +121,22 @@ const AP_Param::GroupInfo AP_Motors6DOF::var_info[] = {
 
     AP_GROUPEND
 };
+void AP_Motors6DOF::set_AP_PropellerMotor(AP_PropellerMotor *m_pMotor)
+{
+	if(m_pMotor != NULL)
+	{
+		m_pPropellerMotor = m_pMotor;
 
+	}
+	else
+	{
+		m_pPropellerMotor = NULL;
+	}
+
+
+
+
+}
 void AP_Motors6DOF::setup_motors(motor_frame_class frame_class, motor_frame_type frame_type)
 {
     // remove existing motors
@@ -201,6 +217,16 @@ void AP_Motors6DOF::add_motor_raw_6dof(int8_t motor_num, float roll_fac, float p
     _throttle_factor[motor_num] = throttle_fac;
     _forward_factor[motor_num] = forward_fac;
     _lateral_factor[motor_num] = lat_fac;
+
+    if(m_pPropellerMotor != NULL)
+    {
+        m_pPropellerMotor->setON_OFF_Cmd(motor_num, 0);   //启动电机
+    	motor_enabled[motor_num] = true;
+    	hal.scheduler->delay_microseconds(DELAYTIME); //每条指令延时200us（暂定）*/
+
+    }
+
+
 }
 
 // output_min - sends minimum values out to the motors
@@ -217,9 +243,18 @@ void AP_Motors6DOF::output_min()
 
     // fill the motor_out[] array for HIL use and send minimum value to each motor
     // ToDo find a field to store the minimum pwm instead of hard coding 1500
-    for (i=0; i<AP_MOTORS_MAX_NUM_MOTORS; i++) {
-        if (motor_enabled[i]) {
-            rc_write(i, 1500);
+    for (i=0; i<AP_MOTORS_MAX_NUM_MOTORS; i++)
+    {
+        if (motor_enabled[i])
+        {
+           // rc_write(i, 1500);
+        	if(m_pPropellerMotor != NULL)
+        	{
+        		m_pPropellerMotor->setDirection_Cmd(i, 0);   //顺时针
+        		hal.scheduler->delay_microseconds(DELAYTIME); //延时
+
+        	}
+
         }
     }
 }
@@ -234,6 +269,9 @@ void AP_Motors6DOF::output_to_motors()
     int8_t i;
     int16_t motor_out[AP_MOTORS_MAX_NUM_MOTORS];    // final pwm values sent to the motor
 
+
+
+	//hal.scheduler->delay_microseconds(DELAYTIME); //每条指令延时200us（暂定）
     switch (_spool_state) {
     case SpoolState::SHUT_DOWN:
         // sends minimum values out to the motors
@@ -265,9 +303,24 @@ void AP_Motors6DOF::output_to_motors()
     }
 
     // send output to each motor
-    for (i=0; i<AP_MOTORS_MAX_NUM_MOTORS; i++) {
-        if (motor_enabled[i]) {
-            rc_write(i, motor_out[i]);
+    for (i=0; i<AP_MOTORS_MAX_NUM_MOTORS; i++)
+    {
+        if (motor_enabled[i])
+        {
+
+        	if(motor_out[i]>1500)//正转
+        	{
+        		m_pPropellerMotor->setDirection_Cmd(i, 0);   //顺时针
+        		hal.scheduler->delay_microseconds(DELAYTIME); //延时
+        	}
+        	else//反转
+        	{
+        		m_pPropellerMotor->setDirection_Cmd(i, 0);   //逆时针
+        		hal.scheduler->delay_microseconds(DELAYTIME); //延时
+        	}
+     		m_pPropellerMotor->setSpeed_Cmd(i, fabs(motor_out[i]-1500));
+        	hal.scheduler->delay_microseconds(DELAYTIME);
+          //  rc_write(i, motor_out[i]);
         }
     }
 }

@@ -78,7 +78,8 @@
 #include <AP_TemperatureSensor/TSYS01.h>
 #include <AP_Common/AP_FWVersion.h>
 
-#include <AP_Yi_Star/AP_Yi_Star.h>
+#include <AP_CrawlerMotor/AP_CrawlerMotor.h>
+#include <AP_PropellerMotor/AP_PropellerMotor.h>
 // Local modules
 #include "defines.h"
 #include "config.h"
@@ -140,6 +141,8 @@ public:
 
     Sub(void);
 
+    ~Sub(void);
+
     // HAL::Callbacks implementation.
     void setup() override;
     void loop() override;
@@ -172,7 +175,8 @@ private:
 
     AP_GPS gps;
 
-    AP_Yi_Star yi_star;
+    AP_CrawlerMotor crawlermotor;
+    AP_PropellerMotor *propellermotor;
 
     AP_LeakDetector leak_detector;
 
@@ -720,7 +724,7 @@ private:
 public:
     void mavlink_delay_cb();
     void mainloop_failsafe_check();
-    void update_Yi_Star();
+    void update_crawlermotor();
 };
 
 extern const AP_HAL::HAL& hal;

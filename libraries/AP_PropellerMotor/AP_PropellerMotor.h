@@ -18,32 +18,51 @@
 #include <AP_Notify/AP_Notify.h>
 #include <AP_SerialManager/AP_SerialManager.h>
 #include <AP_HAL/utility/RingBuffer.h>
+#include <GCS_MAVLink/GCS.h>
 
-
-class AP_Yi_Star {
+class AP_PropellerMotor {
 public:
-    AP_Yi_Star();
+    AP_PropellerMotor();
 
     /* Do not allow copies */
-    AP_Yi_Star(const AP_Yi_Star &other) = delete;
-    AP_Yi_Star &operator=(const AP_Yi_Star&) = delete;
+    AP_PropellerMotor(const AP_PropellerMotor &other) = delete;
+    AP_PropellerMotor &operator=(const AP_PropellerMotor&) = delete;
 
     // init - perform required initialisation
     void init(const AP_SerialManager& serial_manager);
 
-    bool update(void);
+    //设置速度命令
+    bool setSpeed_Cmd(uint8_t channel, uint16_t value);
 
-    uint8_t cx;
-    uint8_t cy;
+    //设置方向命令
+    bool setDirection_Cmd(uint8_t channel, uint8_t value);
 
-    uint32_t last_frame_ms;
+    //设置启停命令
+    bool setON_OFF_Cmd(uint8_t channel, uint8_t value);
+
+
+    //推进器速度
+    uint8_t m_cmdSpeed[7];
+
+    //推进器启停
+    uint8_t m_cmdOn_OFF[5];
+
+    //推进器方向
+    uint8_t m_cmdDirection[6];
+
+    typedef union
+    {
+    	uint8_t B[2];
+    	uint16_t all;
+    	int16_t sall;
+    } WORD_Un;
+
 
 private:
     AP_HAL::UARTDriver *_port;                  // UART used to send data to FrSky receiver
 
     uint8_t _step;
-    uint8_t _cx_temp;
-    uint8_t _cy_temp;
+
 
 
 

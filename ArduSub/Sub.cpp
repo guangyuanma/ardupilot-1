@@ -44,10 +44,20 @@ Sub::Sub()
     // init sensor error logging flags
     sensor_health.baro = true;
     sensor_health.compass = true;
+    propellermotor = new AP_PropellerMotor();
 
 #if CONFIG_HAL_BOARD != HAL_BOARD_SITL
     failsafe.pilot_input = true;
 #endif
 }
+Sub::~Sub()
+{
+	if(propellermotor != NULL)
+	{
 
+		delete propellermotor;
+		propellermotor = NULL;
+	}
+
+}
 Sub sub;

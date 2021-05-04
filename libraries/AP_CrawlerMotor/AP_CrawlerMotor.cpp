@@ -19,19 +19,22 @@
 /* 
    FRSKY Telemetry library
 */
-#define AP_SERIALMANAGER_YI_STAR_BAND 115200
+#define AP_SERIALMANAGER_YI_STAR_BAND 9600
 #define AP_SERIALMANAGER_YI_STAR_BUFSIZE_RX 64
 #define AP_SERIALMANAGER_YI_STAR_BUFSIZE_TX 64
-#include "AP_Yi_Star.h"
+#include "AP_CrawlerMotor.h"
 
 
 
 extern const AP_HAL::HAL& hal;
 
-AP_Yi_Star::AP_Yi_Star(void)
+AP_CrawlerMotor::AP_CrawlerMotor(void)
 {
 	_port = NULL;
 	_step = 0;
+    memset(&m_cmd, 0, 8);
+    m_crawlerspeed_motor1 = 300;
+    m_crawlerspeed_motor2 = 300;
 
 }
 
@@ -39,11 +42,11 @@ AP_Yi_Star::AP_Yi_Star(void)
  * init - perform required initialisation
  */
 
-void AP_Yi_Star::init(const AP_SerialManager& serial_manager)
+void AP_CrawlerMotor::init(const AP_SerialManager& serial_manager)
 
 {
     // check for protocol configured for a serial port - only the first serial port with one of these protocols will then run (cannot have FrSky on multiple serial ports)
-    if ((_port = serial_manager.find_serial(AP_SerialManager::SerialProtocol_Yi_Star, 0)))
+    if ((_port = serial_manager.find_serial(AP_SerialManager::SerialProtocol_CrawlerMotor, 0)))
     {
         _port->set_flow_control(AP_HAL::UARTDriver::FLOW_CONTROL_DISABLE);
         _port->begin(AP_SERIALMANAGER_YI_STAR_BAND, AP_SERIALMANAGER_YI_STAR_BUFSIZE_RX, AP_SERIALMANAGER_YI_STAR_BUFSIZE_TX);
@@ -52,75 +55,42 @@ void AP_Yi_Star::init(const AP_SerialManager& serial_manager)
 }
 
 
-bool AP_Yi_Star::update(void)
+bool AP_CrawlerMotor::update(void)
 {
 	if(_port == NULL)
 		return false;
 
-	int16_t num = _port->available();
-	uint8_t data;
-	//uint8_t checksum = 0;
 
-	for(int16_t i = 0; i<num; i++)
+
+	if (_port->txspace() < 8)
 	{
-		data = _port->read();
-		switch(_step)
-		{
-		  	case 0:
-		  		if(data == 0xA5)
-		  			_step = 1;
-		  		break;
-
-		  	case 1:
-		  		if(data == 0x5A)
-		  			_step = 2;
-		  		else
-		  			_step = 0;
-		  		break;
-
-
-		  	case 2:
-		  		{
-		  			_cx_temp = data;
-		  		 	_step = 3;
-		  		}
-
-		  		break;
-
-		  	case 3:
-		  		{
-		  			_cy_temp = data;
-		  		 	_step = 4;
-		  		}
-
-		  		break;
-
-		  	case 4:
-		  		{
-
-
-
-		  		 //	if(checksum == data)
-		  		 	{   _step = 0;
-		  		 	    //checksum = _cx_temp + _cy_temp;
-
-		  		 		cx = _cx_temp;
-		  		 		cy = _cy_temp;
-		  		 		last_frame_ms = AP_HAL::millis();
-		  		 		return true;
-		  		 	}
-
-
-		  		}
-
-		  		break;
-
-		  	default:
-		  		_step = 0;
-		 }
-
-
+		return false;
 	}
+	m_cmd[0] = 0x55;
+	m_cmd[1]  = 0xaa;
+	m_cmd[2]  = 0x05;
+	WORD_Un speed1;
+
+
+	// 先高后低字节
+	speed1.sall = m_crawlerspeed_motor1;
+	m_cmd[3]  = speed1.B[1];
+	m_cmd[4]  = speed1.B[0];
+
+	WORD_Un speed2;
+	speed2.sall = m_crawlerspeed_motor2;
+	m_cmd[5]  = speed2.B[1];
+	m_cmd[6]  = speed2.B[0];
+
+	uint8_t cksSum = 0;
+	for(int i = 0; i <7; i++)
+	{
+		cksSum ^= m_cmd[i];
+	}
+	m_cmd[7] = cksSum;
+
+	_port->write(m_cmd, sizeof(m_cmd));
+
 	return true;
 
 }

@@ -289,6 +289,7 @@ const AP_Param::Info Sub::var_info[] = {
     // @Values: 0:BlueROV1, 1:Vectored, 2:Vectored_6DOF, 3:Vectored_6DOF_90, 4:SimpleROV-3, 5:SimpleROV-4, 6:SimpleROV-5, 7:Custom
     GSCALAR(frame_configuration, "FRAME_CONFIG", AP_Motors6DOF::SUB_FRAME_VECTORED),
 
+
     // @Group: BTN0_
     // @Path: ../libraries/AP_JSButton/AP_JSButton.cpp
     GGROUP(jbtn_0,                   "BTN0_", JSButton),
@@ -632,6 +633,10 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @Path: ../libraries/AP_Scripting/AP_Scripting.cpp
     AP_SUBGROUPINFO(scripting, "SCR_", 18, ParametersG2, AP_Scripting),
 #endif
+
+
+	AP_GROUPINFO("CR_MOTO_1", 19, ParametersG2, V_Speed_CrawlerMotor1, 300),
+	AP_GROUPINFO("CR_MOTO_2", 20, ParametersG2, V_Speed_CrawlerMotor2, 300),
 
     AP_GROUPEND
 };

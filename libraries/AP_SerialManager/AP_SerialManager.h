@@ -113,7 +113,8 @@ public:
         SerialProtocol_WindVane = 21,
         SerialProtocol_SLCAN = 22,
         SerialProtocol_RCIN = 23,
-		SerialProtocol_Yi_Star = 24,
+		SerialProtocol_CrawlerMotor = 24,
+		SerialProtocol_PropellerMotor = 25,
     };
 
     // get singleton instance

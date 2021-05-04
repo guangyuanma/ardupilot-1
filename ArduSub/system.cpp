@@ -57,6 +57,11 @@ void Sub::init_ardupilot()
     
     // initialise serial port
     serial_manager.init();
+    crawlermotor.init(serial_manager);
+
+    propellermotor->init(serial_manager);
+
+    motors.set_AP_PropellerMotor(propellermotor);
 
     // setup first port early to allow BoardConfig to report errors
     gcs().setup_console();
@@ -105,7 +110,7 @@ void Sub::init_ardupilot()
     gps.set_log_gps_bit(MASK_LOG_GPS);
     gps.init(serial_manager);
 
-    yi_star.init(serial_manager);
+
 
     AP::compass().set_log_bit(MASK_LOG_COMPASS);
     AP::compass().init();

@@ -7,6 +7,9 @@
 #include <AP_Math/AP_Math.h>        // ArduPilot Mega Vector/Matrix math Library
 #include <RC_Channel/RC_Channel.h>     // RC Channel Library
 #include "AP_MotorsMatrix.h"
+#include <AP_PropellerMotor/AP_PropellerMotor.h>
+
+
 
 /// @class      AP_MotorsMatrix
 class AP_Motors6DOF : public AP_MotorsMatrix {
@@ -55,6 +58,9 @@ public:
 
     // var_info for holding Parameter information
     static const struct AP_Param::GroupInfo        var_info[];
+
+    AP_PropellerMotor *m_pPropellerMotor;   //串口输出数据
+    void set_AP_PropellerMotor(AP_PropellerMotor*m_pMotor);  //设置串口
 
 protected:
     // return current_limit as a number from 0 ~ 1 in the range throttle_min to throttle_max

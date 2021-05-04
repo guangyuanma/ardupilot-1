@@ -302,6 +302,8 @@ public:
     AP_Float                surface_depth;
     AP_Int8                 frame_configuration;
 
+
+
     // Note: keep initializers here in the same order as they are declared
     // above.
     Parameters()
@@ -334,6 +336,9 @@ public:
     // control over servo output ranges
     SRV_Channels servo_channels;
 
+
+    AP_Int16       V_Speed_CrawlerMotor1;
+    AP_Int16       V_Speed_CrawlerMotor2;
 #ifdef ENABLE_SCRIPTING
     AP_Scripting scripting;
 #endif // ENABLE_SCRIPTING

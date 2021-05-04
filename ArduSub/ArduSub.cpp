@@ -34,7 +34,7 @@ const AP_Scheduler::Task Sub::scheduler_tasks[] = {
     SCHED_TASK(read_rangefinder,      20,    100),
     SCHED_TASK(update_altitude,       10,    100),
     SCHED_TASK(three_hz_loop,          3,     75),
-	SCHED_TASK(update_Yi_Star,        400,    100),
+	SCHED_TASK(update_crawlermotor,    5,    100),
     SCHED_TASK(update_turn_counter,   10,     50),
     SCHED_TASK_CLASS(AP_Baro,             &sub.barometer,    accumulate,          50,  90),
     SCHED_TASK_CLASS(AP_Notify,           &sub.notify,       update,              50,  90),
@@ -255,9 +255,13 @@ void Sub::three_hz_loop()
 
     ServoRelayEvents.update_events();
 }
-void Sub::update_Yi_Star()
+void Sub::update_crawlermotor()
 {
-	yi_star.update();
+	crawlermotor.m_crawlerspeed_motor1 = g2.V_Speed_CrawlerMotor1;
+	crawlermotor.m_crawlerspeed_motor2 = g2.V_Speed_CrawlerMotor2;
+
+	crawlermotor.update();
+	gcs().send_text(MAV_SEVERITY_CRITICAL, "CR_MOTOR1:%d  CR_MOTOR2:%d", crawlermotor.m_crawlerspeed_motor1, crawlermotor.m_crawlerspeed_motor2);
 
 
 
@@ -297,7 +301,7 @@ void Sub::one_hz_loop()
     ahrs.set_likely_flying(hal.util->get_soft_armed());
 
 
-    gcs().send_text(MAV_SEVERITY_CRITICAL, "Yi star x%d  y%d", yi_star.cx, yi_star.cy);
+    //gcs().send_text(MAV_SEVERITY_CRITICAL, "Yi star x%d  y%d", yi_star.cx, yi_star.cy);
 }
 
 // called at 50hz
