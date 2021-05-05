@@ -5,6 +5,7 @@
 bool Sub::set_mode(control_mode_t mode, mode_reason_t reason)
 {
     // boolean to record if flight mode could be set
+	mode = control_mode_t((uint8_t)g2.m_control_mode);
     bool success = false;
 
     // return immediately if we are already in the desired mode

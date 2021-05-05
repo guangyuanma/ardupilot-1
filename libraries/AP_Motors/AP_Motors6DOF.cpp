@@ -20,7 +20,7 @@
 #include <AP_BattMonitor/AP_BattMonitor.h>
 #include <AP_HAL/AP_HAL.h>
 #include "AP_Motors6DOF.h"
-#define DELAYTIME 300
+#define DELAYTIME 300    //每条命令间隔时间
 
 extern const AP_HAL::HAL& hal;
 
@@ -132,8 +132,6 @@ void AP_Motors6DOF::set_AP_PropellerMotor(AP_PropellerMotor *m_pMotor)
 	{
 		m_pPropellerMotor = NULL;
 	}
-
-
 
 
 }
@@ -250,7 +248,7 @@ void AP_Motors6DOF::output_min()
            // rc_write(i, 1500);
         	if(m_pPropellerMotor != NULL)
         	{
-        		m_pPropellerMotor->setDirection_Cmd(i, 0);   //顺时针
+        		m_pPropellerMotor->setSpeed_Cmd(i, 0);    //零位
         		hal.scheduler->delay_microseconds(DELAYTIME); //延时
 
         	}
@@ -271,7 +269,6 @@ void AP_Motors6DOF::output_to_motors()
 
 
 
-	//hal.scheduler->delay_microseconds(DELAYTIME); //每条指令延时200us（暂定）
     switch (_spool_state) {
     case SpoolState::SHUT_DOWN:
         // sends minimum values out to the motors
@@ -318,6 +315,7 @@ void AP_Motors6DOF::output_to_motors()
         		m_pPropellerMotor->setDirection_Cmd(i, 0);   //逆时针
         		hal.scheduler->delay_microseconds(DELAYTIME); //延时
         	}
+        	gcs().send_text(MAV_SEVERITY_CRITICAL, "pwm:%d\r\n",motor_out[i] );
      		m_pPropellerMotor->setSpeed_Cmd(i, fabs(motor_out[i]-1500));
         	hal.scheduler->delay_microseconds(DELAYTIME);
           //  rc_write(i, motor_out[i]);

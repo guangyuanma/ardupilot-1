@@ -17,14 +17,14 @@
 */
 
 /* 
-   FRSKY Telemetry library
+
 */
 #define AP_SERIALMANAGER_YI_STAR_BAND 115200
 #define AP_SERIALMANAGER_YI_STAR_BUFSIZE_RX 32
 #define AP_SERIALMANAGER_YI_STAR_BUFSIZE_TX 32
 #include "AP_PropellerMotor.h"
 
-
+#define KP 9
 
 extern const AP_HAL::HAL& hal;
 
@@ -54,7 +54,12 @@ void AP_PropellerMotor::init(const AP_SerialManager& serial_manager)
     }
 
 }
-
+/*
+ *
+ *   pwm输出：1500零位 1000反向最大 2000反向最大
+ *   推进器500零位 5000最大 0x1388 ~0xC350 系数 = 10
+ *   系数取（5000-500）/500 = 9*10
+ */
 
 bool AP_PropellerMotor::setSpeed_Cmd(uint8_t channel, uint16_t value)
 {
@@ -75,7 +80,14 @@ bool AP_PropellerMotor::setSpeed_Cmd(uint8_t channel, uint16_t value)
 	m_cmdSpeed[4]  = 0;             //寄存器地址高
 
 	WORD_Un speed1;                //速度值
-	speed1.sall = value;
+	speed1.all = value*KP*10;
+
+	if(speed1.all < 0x1388)   //500RPM
+		speed1.all = 0x1388;
+
+	if(speed1.all > 0xC350)  ///5000RPM
+		speed1.all = 0xC350;
+
 	// 先高后低字节
 	m_cmdSpeed[5]  = speed1.B[1];
 	m_cmdSpeed[6]  = speed1.B[0];

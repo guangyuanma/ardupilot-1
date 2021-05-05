@@ -339,6 +339,9 @@ public:
 
     AP_Int16       V_Speed_CrawlerMotor1;
     AP_Int16       V_Speed_CrawlerMotor2;
+
+
+    AP_Int8               m_control_mode;
 #ifdef ENABLE_SCRIPTING
     AP_Scripting scripting;
 #endif // ENABLE_SCRIPTING

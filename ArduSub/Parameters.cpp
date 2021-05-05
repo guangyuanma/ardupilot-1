@@ -637,6 +637,10 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
 
 	AP_GROUPINFO("CR_MOTO_1", 19, ParametersG2, V_Speed_CrawlerMotor1, 300),
 	AP_GROUPINFO("CR_MOTO_2", 20, ParametersG2, V_Speed_CrawlerMotor2, 300),
+	//默认自动模式
+	AP_GROUPINFO("FLY_MODE", 21, ParametersG2, m_control_mode, 3),
+
+
 
     AP_GROUPEND
 };
