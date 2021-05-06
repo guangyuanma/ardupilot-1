@@ -62,6 +62,8 @@ public:
     AP_PropellerMotor *m_pPropellerMotor;   //串口输出数据
     void set_AP_PropellerMotor(AP_PropellerMotor*m_pMotor);  //设置串口
 
+    int m_CNT;
+
 protected:
     // return current_limit as a number from 0 ~ 1 in the range throttle_min to throttle_max
     float               get_current_limit_max_throttle() override;
