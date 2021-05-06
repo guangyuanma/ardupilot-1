@@ -4,8 +4,7 @@
 // returns true if mode was successfully set
 bool Sub::set_mode(control_mode_t mode, mode_reason_t reason)
 {
-    // boolean to record if flight mode could be set
-	mode = control_mode_t((uint8_t)g2.m_control_mode);
+
     bool success = false;
 
     // return immediately if we are already in the desired mode
@@ -104,6 +103,8 @@ bool Sub::set_mode(control_mode_t mode, mode_reason_t reason)
 // called at 100hz or more
 void Sub::update_flight_mode()
 {
+    // boolean to record if flight mode could be set
+	control_mode = control_mode_t((uint8_t)g2.m_control_mode);
     switch (control_mode) {
     case ACRO:
         acro_run();
