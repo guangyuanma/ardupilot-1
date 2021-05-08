@@ -261,7 +261,7 @@ void Sub::update_crawlermotor()
 	crawlermotor.m_crawlerspeed_motor2 = g2.V_Speed_CrawlerMotor2;
 
 	crawlermotor.update();
-	gcs().send_text(MAV_SEVERITY_CRITICAL, "CR_MOTOR1:%d  CR_MOTOR2:%d", crawlermotor.m_crawlerspeed_motor1, crawlermotor.m_crawlerspeed_motor2);
+	//gcs().send_text(MAV_SEVERITY_CRITICAL, "CR_MOTOR1:%d  CR_MOTOR2:%d", crawlermotor.m_crawlerspeed_motor1, crawlermotor.m_crawlerspeed_motor2);
 
 
 

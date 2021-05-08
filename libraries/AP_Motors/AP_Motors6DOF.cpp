@@ -317,12 +317,7 @@ void AP_Motors6DOF::output_to_motors()
         		m_pPropellerMotor->setDirection_Cmd(i+1, 0);   //ÄæÊ±Õë
         		hal.scheduler->delay_microseconds(DELAYTIME); //ÑÓÊ±
         	}
-        	if(m_CNT == 50000);
-        	{
 
-        		gcs().send_text(MAV_SEVERITY_CRITICAL, "pwm:%d\r\n",motor_out[i] );
-        		m_CNT = 0;
-        	}
 
      		m_pPropellerMotor->setSpeed_Cmd(i+1, fabs(motor_out[i]-1500));
         	hal.scheduler->delay_microseconds(DELAYTIME);
