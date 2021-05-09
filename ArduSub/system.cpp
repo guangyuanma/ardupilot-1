@@ -57,7 +57,7 @@ void Sub::init_ardupilot()
     
     // initialise serial port
     serial_manager.init();
-    crawlermotor.init(serial_manager);
+    //crawlermotor.init(serial_manager);
 
     propellermotor->init(serial_manager);
 

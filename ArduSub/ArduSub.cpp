@@ -34,7 +34,7 @@ const AP_Scheduler::Task Sub::scheduler_tasks[] = {
     SCHED_TASK(read_rangefinder,      20,    100),
     SCHED_TASK(update_altitude,       10,    100),
     SCHED_TASK(three_hz_loop,          3,     75),
-	SCHED_TASK(update_crawlermotor,    5,    100),
+	//SCHED_TASK(update_crawlermotor,    5,    100),
     SCHED_TASK(update_turn_counter,   10,     50),
     SCHED_TASK_CLASS(AP_Baro,             &sub.barometer,    accumulate,          50,  90),
     SCHED_TASK_CLASS(AP_Notify,           &sub.notify,       update,              50,  90),
@@ -132,6 +132,17 @@ void Sub::fast_loop()
 
     // check if we've reached the surface or bottom
     update_surface_and_bottom_detector();
+
+    //提示到底部
+    if((ap.at_bottom == 1) && (isBottom == false))
+    {
+    	  gcs().send_text(MAV_SEVERITY_INFO, "robot has reached bottom");
+    	  hal.scheduler->delay(2000);
+    	  isBottom = true;
+    }
+
+
+
 
 #if MOUNT == ENABLED
     // camera mount's fast update
@@ -255,6 +266,8 @@ void Sub::three_hz_loop()
 
     ServoRelayEvents.update_events();
 }
+
+/*
 void Sub::update_crawlermotor()
 {
 	crawlermotor.m_crawlerspeed_motor1 = g2.V_Speed_CrawlerMotor1;
@@ -263,9 +276,7 @@ void Sub::update_crawlermotor()
 	crawlermotor.update();
 	//gcs().send_text(MAV_SEVERITY_CRITICAL, "CR_MOTOR1:%d  CR_MOTOR2:%d", crawlermotor.m_crawlerspeed_motor1, crawlermotor.m_crawlerspeed_motor2);
 
-
-
-}
+}*/
 // one_hz_loop - runs at 1Hz
 void Sub::one_hz_loop()
 {

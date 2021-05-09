@@ -178,6 +178,8 @@ private:
     AP_CrawlerMotor crawlermotor;
     AP_PropellerMotor *propellermotor;
 
+    bool isBottom;
+
     AP_LeakDetector leak_detector;
 
     TSYS01 celsius;
@@ -465,6 +467,8 @@ private:
     uint32_t last_pilot_yaw_input_ms;
     uint32_t fs_terrain_recover_start_ms;
 
+
+
     static const AP_Scheduler::Task scheduler_tasks[];
     static const AP_Param::Info var_info[];
     static const struct LogStructure log_structure[];
@@ -690,6 +694,11 @@ private:
     bool surface_init(void);
     void surface_run();
 
+
+    bool bottom_manual_init(void);
+    void bottom_manual_run();
+
+
     uint16_t get_pilot_speed_dn();
 
     void convert_old_parameters(void);
@@ -724,7 +733,7 @@ private:
 public:
     void mavlink_delay_cb();
     void mainloop_failsafe_check();
-    void update_crawlermotor();
+  //  void update_crawlermotor();
 };
 
 extern const AP_HAL::HAL& hal;

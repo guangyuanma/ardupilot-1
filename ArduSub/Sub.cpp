@@ -44,6 +44,8 @@ Sub::Sub()
     // init sensor error logging flags
     sensor_health.baro = true;
     sensor_health.compass = true;
+
+    isBottom = false;
     propellermotor = new AP_PropellerMotor();
 
 #if CONFIG_HAL_BOARD != HAL_BOARD_SITL

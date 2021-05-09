@@ -45,6 +45,10 @@ bool Sub::set_mode(control_mode_t mode, mode_reason_t reason)
         success = surface_init();
         break;
 
+    case BOTTOM_MANUAL:
+        success = bottom_manual_init();
+        break;
+
 #if POSHOLD_ENABLED == ENABLED
     case POSHOLD:
         success = poshold_init();
@@ -116,6 +120,12 @@ void Sub::update_flight_mode()
 
     case ALT_HOLD:
         althold_run();
+        break;
+
+
+
+    case BOTTOM_MANUAL:
+        bottom_manual_run();
         break;
 
     case AUTO:
@@ -217,6 +227,7 @@ void Sub::notify_flight_mode(control_mode_t mode)
     case GUIDED:
     case CIRCLE:
     case SURFACE:
+
         // autopilot modes
         AP_Notify::flags.autopilot_mode = true;
         break;

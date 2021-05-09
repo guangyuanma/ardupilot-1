@@ -48,6 +48,7 @@ void GCS_Sub::update_vehicle_sensor_status_flags()
     case CIRCLE:
     case SURFACE:
     case POSHOLD:
+    case BOTTOM_MANUAL:
         control_sensors_enabled |= MAV_SYS_STATUS_SENSOR_Z_ALTITUDE_CONTROL;
         control_sensors_health |= MAV_SYS_STATUS_SENSOR_Z_ALTITUDE_CONTROL;
         control_sensors_enabled |= MAV_SYS_STATUS_SENSOR_XY_POSITION_CONTROL;

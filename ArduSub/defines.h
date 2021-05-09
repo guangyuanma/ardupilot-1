@@ -40,7 +40,9 @@ enum control_mode_t {
     SURFACE =       9,  // automatically return to surface, pilot maintains horizontal control
     POSHOLD =      16,  // automatic position hold with manual override, with automatic throttle
     MANUAL =       19,  // Pass-through input with no stabilization
-    MOTOR_DETECT = 20   // Automatically detect motors orientation
+    MOTOR_DETECT = 20,   // Automatically detect motors orientation
+	BOTTOM_MANUAL = 21
+
 };
 
 enum mode_reason_t {
